@@ -16,7 +16,7 @@ Este projeto realiza o download de arquivos HTML, CSS, imagens e scripts de dom�
 
 ## Estrutura do Projeto
 
-project_directory/
+scraping-python/
 │
 ├── data/
 │ ├── file1.csv
