@@ -5,7 +5,7 @@ Este projeto realiza o download de arquivos HTML, CSS, imagens e scripts de dom�
 ## Estrutura do Projeto
 
 
-Claro! Aqui está um arquivo README.md detalhado que inclui um tutorial de instalação e uma explicação sobre o que foi feito no projeto.
+Aqui está um arquivo README.md detalhado que inclui um tutorial de instalação e uma explicação sobre o que foi feito no projeto.
 
 README.md
 markdown
