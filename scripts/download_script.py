@@ -1,9 +1,27 @@
 import os
+import time
+import random
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from pathlib import Path
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+# Função para inicializar o Selenium WebDriver
+def init_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Executar o navegador em modo headless
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
+    return driver
 
 # Função para fazer o download de um arquivo
 def download_file(url, base_directory, subdirectory):
@@ -37,10 +55,12 @@ def replace_links(soup, tag, attribute, base_url, base_directory):
                 element[attribute] = os.path.relpath(local_file, base_directory)
 
 # Função principal para processar o domínio
-def process_domain(domain, download_directory):
+def process_domain(domain, download_directory, driver):
     # Acessar o domínio
-    response = requests.get(domain)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    driver.get(domain)
+    time.sleep(random.uniform(2, 5))  # Aguardar de forma aleatória para imitar comportamento humano
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source, 'html.parser')
 
     # Baixar e substituir arquivos CSS, imagens e scripts
     replace_links(soup, 'link', 'href', domain, download_directory)
@@ -54,8 +74,10 @@ def process_domain(domain, download_directory):
 
     # Acessar a página 2 do domínio
     page_2_url = urljoin(domain, 'page/2')
-    response = requests.get(page_2_url)
-    page_2_soup = BeautifulSoup(response.content, 'html.parser')
+    driver.get(page_2_url)
+    time.sleep(random.uniform(2, 5))  # Aguardar de forma aleatória para imitar comportamento humano
+    page_2_source = driver.page_source
+    page_2_soup = BeautifulSoup(page_2_source, 'html.parser')
     
     # Exportar o conteúdo da página 2 para um arquivo
     with open(os.path.join(download_directory, 'page_2.html'), 'w', encoding='utf-8') as f:
@@ -82,10 +104,13 @@ for csv_file in csv_files:
 if not domains:
     print("No domains to process. Please check the CSV files.")
 else:
-    # Processar cada domínio
-    for domain in domains:
-        domain_name = urlparse(domain).netloc
-        download_directory = os.path.join('../downloads', domain_name)
-        process_domain(domain, download_directory)
-
-print("Processamento concluído!")
+    driver = init_driver()  # Inicializar o driver Selenium
+    try:
+        # Processar cada domínio
+        for domain in domains:
+            domain_name = urlparse(domain).netloc
+            download_directory = os.path.join('../downloads', domain_name)
+            process_domain(domain, download_directory, driver)
+    finally:
+        driver.quit()  # Garantir que o driver seja fechado
+    print("Processamento concluído!")
