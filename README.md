@@ -1,6 +1,6 @@
 # Projeto de Download e Substituição de Arquivos de Domínios
 
-Este projeto realiza o download de arquivos HTML, CSS, imagens e scripts de domínios especificados em arquivos CSV e os substitui por arquivos locais.
+Desenvolvi esse projeto realiza o download de arquivos HTML, CSS, imagens e scripts de domínios especificados em arquivos CSV e os substitui por arquivos locais.
 
 ## Estrutura do Projeto
 
