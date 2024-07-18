@@ -19,15 +19,10 @@ Este projeto realiza o download de arquivos HTML, CSS, imagens e scripts de dom�
 scraping-python/
 │
 ├── data/
-│ ├── file1.csv
-│ └── file2.csv
+│ ├
+│ └── file.csv
 │
 ├── downloads/
-│ 
-│ 
-│ 
-│ 
-│ 
 │ 
 │
 ├── scripts/
